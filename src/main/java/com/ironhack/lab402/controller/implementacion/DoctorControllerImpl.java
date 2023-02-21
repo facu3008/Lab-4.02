@@ -6,6 +6,7 @@ import com.ironhack.lab402.controller.interfaces.DoctorController;
 import com.ironhack.lab402.enums.Status;
 import com.ironhack.lab402.model.Doctor;
 import com.ironhack.lab402.repository.DoctorRepository;
+import com.ironhack.lab402.services.DoctorServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import java.util.List;
 public class DoctorControllerImpl implements DoctorController {
     @Autowired
     DoctorRepository doctorRepository;
+    @Autowired
+    DoctorServices doctorServices;
+
     @GetMapping("/doctors")
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
@@ -43,14 +47,20 @@ public class DoctorControllerImpl implements DoctorController {
         return doctorRepository.findByDepartment(department);
     }
 
+    @Override
+    public Doctor addNewEmployee(Doctor employee) {
+        return null;
+    }
+
     //We use PATCH mapping because we want to update certain properties from a certain employee, and we create a specific DTO for this.
     //We don't need to return anything and that's why the response is NO_CONTENT.
     //http://localhost:8081/employees/update-status/172456
     @PatchMapping("/doctors/update-status/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateStatusEmployee(@PathVariable Long employeeId, @RequestBody @Valid DoctorDtoStatus doctorDTOStatus){
-        doct.updateStatus(id, doctorDTOStatus);
+        doctorServices.updateStatus(employeeId, doctorDTOStatus);
     }
+
 
     //We use PATCH mapping because we want to update certain properties from a certain employee, and we create a specific DTO for this.
     //We don't need to return anything and that's why the response is NO_CONTENT.
@@ -58,7 +68,7 @@ public class DoctorControllerImpl implements DoctorController {
     @PatchMapping("/employees/update-department/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateDepartmentEmployee(@PathVariable Long id, @RequestBody @Valid DoctorDTODepartment doctorDTODepartment){
-        doctorService.updateDepartment(id, doctorDTODepartment;
+        doctorServices.updateDepartment(id, doctorDTODepartment );
     }
 
 }
